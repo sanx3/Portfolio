@@ -1,0 +1,51 @@
+name: Auto-Update IMDb Films
+
+on:
+  schedule:
+    # Runs every day at 6:00 AM UTC (11:30 AM IST)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  update-films:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Needed to push films.json back to repo
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Run IMDb scraper
+        run: |
+          cd scraper
+          python fetch_imdb.py
+          mv films.json ../films.json
+
+      - name: Check if films.json changed
+        id: diff
+        run: |
+          git diff --quiet films.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push updated films.json
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add films.json
+          git commit -m "Auto-update: IMDb sync $(date +'%Y-%m-%d')"
+          git push
+
+      - name: No changes detected
+        if: steps.diff.outputs.changed != 'true'
+        run: echo "No new films added. films.json is up to date."
