@@ -501,7 +501,7 @@
     <div class="nc">
       <div class="nc-poster-wrap">
         <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>Bha. Bha. Ba.</div>
-        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/fMDt3o7CVXDc84WIbOskya8XkSN.jpg" alt="Bha. Bha. Ba." referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+        <img class="nc-poster" id="poster-bhabhaba" alt="Bha. Bha. Ba." onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
       </div>
       <div class="nc-info">
         <div class="nc-role"><span class="badge b1">Asst. Re-Recording Mix Engineer</span></div>
@@ -515,21 +515,21 @@
     <div class="nc">
       <div class="nc-poster-wrap">
         <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>J.S.K</div>
-        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/h9vFIBThQUEHe4KBiGBr3JWJNUA.jpg" alt="JSK" referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+        <img class="nc-poster" id="poster-jsk" alt="JSK" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
       </div>
       <div class="nc-info">
         <div class="nc-role"><span class="badge b1">Asst. Re-Recording Mix Engineer</span></div>
         <div class="nc-year">2025</div>
         <div class="nc-title">J.S.K - Janaki V v/s State of Kerala</div>
         <div class="nc-dir">Dir. Pravin Narayanan · Malayalam</div>
-        <div class="nc-cast">IMDb Rating: 5.8</div>
+        <div class="nc-cast">Suresh Gopi · Anupama Parameswaran</div>
         <a href="https://www.imdb.com/title/tt23458804/" target="_blank" class="nc-imdb">⭐ IMDb</a>
       </div>
     </div>
     <div class="nc">
       <div class="nc-poster-wrap">
         <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>35-Chinna Katha Kaadu</div>
-        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/8Wssy3WJYeF3QFu6E5c1iW74YjQ.jpg" alt="35 Chinna Katha Kaadu" referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+        <img class="nc-poster" id="poster-35ckk" alt="35 Chinna Katha Kaadu" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
       </div>
       <div class="nc-info">
         <div class="nc-role"><span class="badge b2">Asst. Re-Recording Mix Engineer</span></div>
@@ -543,14 +543,14 @@
     <div class="nc">
       <div class="nc-poster-wrap">
         <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>Pavi Caretaker</div>
-        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/kVp1aEsHLxGknTpKaJXBrjkv8GX.jpg" alt="Pavi Caretaker" referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+        <img class="nc-poster" id="poster-pavi" alt="Pavi Caretaker" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
       </div>
       <div class="nc-info">
         <div class="nc-role"><span class="badge b2">Asst. Re-Recording Mix Engineer</span></div>
         <div class="nc-year">2024</div>
         <div class="nc-title">Pavi Caretaker</div>
         <div class="nc-dir">Dir. Vineeth Kumar · Malayalam</div>
-        <div class="nc-cast">Dileep · IMDb Rating: 5.0</div>
+        <div class="nc-cast">Dileep · Radhika Sarathkumar</div>
         <a href="https://www.imdb.com/title/tt27369385/" target="_blank" class="nc-imdb">⭐ IMDb</a>
       </div>
     </div>
@@ -701,6 +701,26 @@
   function toggleAll(){showAll=!showAll;render();}
   function filter(v,btn){cf=v;showAll=false;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
   render();
+
+  // Auto-fetch correct posters from TMDB API
+  const tmdbMovies = [
+    {id:'bhabhaba', tmdbId:1256006},
+    {id:'jsk',      tmdbId:1044944},
+    {id:'35ckk',    tmdbId:1196995},
+    {id:'pavi',     tmdbId:1081319},
+  ];
+  const TMDB_KEY = '8265bd1679663a7ea12ac168da84d2e8';
+  tmdbMovies.forEach(m => {
+    fetch(`https://api.themoviedb.org/3/movie/${m.tmdbId}?api_key=${TMDB_KEY}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.poster_path) {
+          const img = document.getElementById(`poster-${m.id}`);
+          if (img) img.src = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+        }
+      })
+      .catch(() => {});
+  });
 </script>
 </body>
 </html>
