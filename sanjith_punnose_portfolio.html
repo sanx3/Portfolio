@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sanjith Punnose – Re-Recording Mix Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #D4A843;
+    --gold2: #F0C96A;
+    --dark: #080608;
+    --dark2: #0E0B0F;
+    --dark3: #171219;
+    --mid: #251E28;
+    --mid2: #332B38;
+    --cream: #F0E8D8;
+    --muted: #6E5E78;
+    --body: #B8A8C4;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor { width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s; }
+  .cursor-ring { width:34px;height:34px;border:1px solid rgba(212,168,67,0.45);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.3s ease; }
+
+  /* NAV */
+  nav {
+    position:fixed;top:0;left:0;right:0;z-index:200;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.4rem 4rem;
+    background:linear-gradient(to bottom,rgba(8,6,8,0.97),transparent);
+  }
+  .nav-logo {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.4rem;font-weight:600;letter-spacing:0.2em;color:var(--gold);
+  }
+  .nav-links { display:flex;gap:2.5rem;list-style:none; }
+  .nav-links a { font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--body);text-decoration:none;transition:color 0.3s; }
+  .nav-links a:hover { color:var(--gold); }
+  .nav-imdb {
+    font-size:0.7rem;letter-spacing:0.12em;padding:0.4rem 1rem;
+    background:#F5C518;color:#000;text-decoration:none;font-weight:600;
+    transition:opacity 0.3s;
+  }
+  .nav-imdb:hover { opacity:0.85; }
+
+  /* HERO */
+  .hero {
+    min-height:100vh;
+    position:relative;overflow:hidden;
+    display:flex;align-items:flex-end;
+    padding:0 4rem 5rem;
+    background:
+      radial-gradient(ellipse at 75% 30%, rgba(212,168,67,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 15% 70%, rgba(180,100,200,0.05) 0%, transparent 50%),
+      linear-gradient(160deg, #080608 0%, #0E0B0F 100%);
+  }
+  .hero-waveform {
+    position:absolute;right:0;top:0;bottom:0;width:45%;
+    display:flex;align-items:center;gap:4px;padding:0 3rem;
+    opacity:0.07;
+    pointer-events:none;
+  }
+  .wbar {
+    flex:1;background:var(--gold);border-radius:2px;
+    animation:wavePulse 2s ease-in-out infinite;
+  }
+  @keyframes wavePulse {
+    0%,100%{transform:scaleY(var(--base))}
+    50%{transform:scaleY(calc(var(--base) * 2.5))}
+  }
+  .hero-bg-text {
+    position:absolute;bottom:-2rem;right:3rem;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(6rem,16vw,18rem);
+    color:transparent;-webkit-text-stroke:1px rgba(212,168,67,0.07);
+    line-height:1;pointer-events:none;letter-spacing:0.05em;
+    animation:float 10s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+
+  .hero-content { position:relative;z-index:2; }
+  .hero-tag {
+    display:inline-flex;align-items:center;gap:0.8rem;
+    font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:1.5rem;
+    animation:fadeUp 0.8s ease both;
+  }
+  .hero-tag::before { content:'';width:36px;height:1px;background:var(--gold); }
+
+  h1.name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(3.5rem,8vw,7.5rem);
+    font-weight:700;line-height:0.9;letter-spacing:-0.01em;
+    animation:fadeUp 0.8s 0.1s ease both;
+  }
+  h1.name em { font-style:italic;color:var(--gold);display:block; }
+  .hero-role {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(1rem,2.5vw,2rem);
+    letter-spacing:0.4em;color:var(--muted);
+    margin-top:1rem;margin-bottom:0.5rem;
+    animation:fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-sub {
+    font-size:0.82rem;color:var(--body);letter-spacing:0.05em;
+    margin-bottom:2rem;
+    animation:fadeUp 0.8s 0.25s ease both;
+  }
+
+  .hero-stats { display:flex;gap:3rem;margin-top:2rem;flex-wrap:wrap;animation:fadeUp 0.8s 0.3s ease both; }
+  .stat .n { font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--gold);line-height:1; }
+  .stat .l { font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted); }
+
+  .hero-btns { display:flex;gap:1rem;margin-top:2.5rem;animation:fadeUp 0.8s 0.4s ease both;flex-wrap:wrap; }
+  .btn-primary {
+    display:inline-flex;align-items:center;gap:0.6rem;
+    padding:0.85rem 2rem;border:1px solid var(--gold);
+    color:var(--gold);font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;
+    text-decoration:none;transition:all 0.3s;
+  }
+  .btn-primary:hover { background:var(--gold);color:var(--dark); }
+  .btn-imdb {
+    display:inline-flex;align-items:center;gap:0.5rem;
+    padding:0.85rem 1.5rem;background:#F5C518;
+    color:#000;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;
+    text-decoration:none;font-weight:600;transition:opacity 0.3s;
+  }
+  .btn-imdb:hover{opacity:0.85;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+  /* SECTIONS */
+  section { padding:6rem 4rem; }
+  .sec-label {
+    font-size:0.64rem;letter-spacing:0.38em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:0.8rem;
+    display:flex;align-items:center;gap:0.8rem;
+  }
+  .sec-label::after { content:'';flex:1;height:1px;background:var(--mid2);max-width:50px; }
+  h2.sec-heading {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(1.8rem,4vw,3.2rem);font-weight:600;line-height:1.1;margin-bottom:1rem;
+  }
+
+  /* ABOUT */
+  .about { background:var(--dark2);display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:center; }
+  .photo-wrap { position:relative; }
+  .photo-box {
+    width:100%;aspect-ratio:3/4;
+    background:linear-gradient(145deg,var(--mid) 0%,var(--dark3) 100%);
+    position:relative;overflow:hidden;
+  }
+  .photo-inner {
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;gap:0.6rem;
+    color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.2em;
+  }
+  .photo-icon { font-size:2.5rem;opacity:0.2; }
+  .corner2 { position:absolute;width:24px;height:24px;border-color:var(--gold);border-style:solid;opacity:0.35; }
+  .c1{top:14px;left:14px;border-width:2px 0 0 2px}
+  .c2{top:14px;right:14px;border-width:2px 2px 0 0}
+  .c3{bottom:14px;left:14px;border-width:0 0 2px 2px}
+  .c4{bottom:14px;right:14px;border-width:0 2px 2px 0}
+  .photo-badge {
+    position:absolute;bottom:-1.5rem;right:-1.5rem;
+    width:110px;height:110px;background:var(--gold);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+  }
+  .photo-badge .bn { font-family:'Bebas Neue',sans-serif;font-size:2.6rem;color:var(--dark);line-height:1; }
+  .photo-badge .bl { font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--dark);opacity:0.7;text-align:center; }
+
+  .about-text p { color:var(--body);line-height:1.9;margin-bottom:1.3rem;font-size:0.96rem; }
+  .about-text strong { color:var(--cream);font-weight:500; }
+  .tags { display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem; }
+  .tag {
+    padding:0.32rem 0.9rem;border:1px solid var(--mid2);
+    font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--muted);transition:all 0.3s;cursor:default;
+  }
+  .tag:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* EXPERTISE */
+  .expertise { background:var(--dark); }
+  .exp-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2.5rem;background:var(--mid2); }
+  .ec {
+    background:#211A26;padding:2.2rem 1.8rem;
+    position:relative;overflow:hidden;transition:background 0.3s;
+  }
+  .ec:hover{background:#2A2030;}
+  .ec::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform 0.4s;}
+  .ec:hover::after{transform:scaleX(1);}
+  .ec-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:transparent;-webkit-text-stroke:1.5px rgba(212,168,67,0.55);line-height:1;margin-bottom:0.8rem;}
+  .ec h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;margin-bottom:0.7rem;color:var(--cream);}
+  .ec p{font-size:0.82rem;color:#9A8AA8;line-height:1.75;}
+
+  /* FILMOGRAPHY */
+  .filmography { background:var(--dark2); }
+  .film-head { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem; }
+  .filters { display:flex;gap:0.4rem;flex-wrap:wrap; }
+  .fb {
+    padding:0.32rem 1rem;border:1px solid var(--mid2);background:none;
+    color:var(--muted);font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;
+    cursor:pointer;transition:all 0.3s;font-family:'Outfit',sans-serif;
+  }
+  .fb.active,.fb:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,0.05);}
+
+  table.ft{width:100%;border-collapse:collapse;}
+  .ft thead tr{border-bottom:1px solid var(--mid2);}
+  .ft th{font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);padding:0 1rem 0.9rem 0;text-align:left;font-weight:400;}
+  .ft tbody tr{border-bottom:1px solid rgba(37,30,40,0.7);transition:background 0.2s;}
+  .ft tbody tr:hover{background:rgba(212,168,67,0.03);}
+  .ft td{padding:0.95rem 1rem 0.95rem 0;font-size:0.86rem;color:var(--body);vertical-align:middle;}
+  .ft .yr{font-family:'Bebas Neue',sans-serif;font-size:1rem !important;color:var(--gold) !important;letter-spacing:0.08em;}
+  .ft .tt{font-family:'Cormorant Garamond',serif;font-size:1.05rem !important;font-weight:600;color:var(--cream) !important;}
+  .badge{display:inline-block;padding:0.18rem 0.65rem;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;border-radius:2px;}
+  .b1{background:rgba(212,168,67,0.12);color:var(--gold);}
+  .b2{background:rgba(120,200,160,0.1);color:#78c8a0;}
+  .b3{background:rgba(180,130,220,0.1);color:#b482dc;}
+  .confirmed{font-size:0.58rem;color:#78c8a0;letter-spacing:0.05em;}
+
+  .smb{display:block;margin:2rem auto 0;padding:0.85rem 2.5rem;border:1px solid var(--mid2);background:none;color:var(--muted);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.3s;}
+  .smb:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* NOTABLE WORKS */
+  .notable { background:var(--dark); }
+  .notables-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:2.5rem;background:var(--mid); }
+  .nc {
+    background:var(--dark);padding:2rem;position:relative;overflow:hidden;transition:background 0.3s;
+  }
+  .nc:hover{background:var(--dark3);}
+  /* Notable works poster cards */
+  .nc { padding: 0; overflow: hidden; position: relative; }
+  .nc-poster-wrap { width:100%; aspect-ratio:2/3; overflow:hidden; position:relative; background:var(--dark3); }
+  .nc-poster { width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.88); transition:filter 0.4s, transform 0.4s; }
+  .nc:hover .nc-poster { filter:brightness(1); transform:scale(1.04); }
+  .nc-poster-fallback {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; gap:0.5rem;
+    background: linear-gradient(145deg, var(--mid) 0%, var(--dark3) 100%);
+    color:var(--muted); font-family:'Bebas Neue',sans-serif;
+    font-size:1.1rem; letter-spacing:0.15em; text-align:center; padding:1rem;
+  }
+  .nc-poster-fallback .pf-icon { font-size:2.5rem; opacity:0.25; margin-bottom:0.5rem; }
+  .nc-info { padding: 1.2rem 1.5rem; }
+  .nc-year { font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.2em; color:var(--gold); margin-bottom:0.3rem; }
+  .nc-title { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-weight:600; margin-bottom:0.2rem; color:var(--cream); }
+  .nc-dir { font-size:0.75rem; color:var(--muted); margin-bottom:0.5rem; }
+  .nc-cast { font-size:0.78rem; color:var(--body); }
+  .nc-role { margin-bottom:0.4rem; }
+  .nc::after { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--gold); transform:scaleY(0); transition:transform 0.4s; transform-origin:bottom; }
+  .nc:hover::after { transform:scaleY(1); }
+
+  /* CONTACT */
+  .contact{background:var(--dark2);text-align:center;position:relative;overflow:hidden;padding:7rem 4rem;}
+  .contact::before{
+    content:'SOUND';position:absolute;font-family:'Bebas Neue',sans-serif;
+    font-size:22vw;color:transparent;-webkit-text-stroke:1px rgba(212,168,67,0.04);
+    top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;
+  }
+  .contact-inner{position:relative;z-index:2;}
+  .contact .sec-label{justify-content:center;}
+  .contact .sec-label::after{display:none;}
+  .contact-email{
+    font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2.4rem);
+    color:var(--cream);text-decoration:none;border-bottom:1px solid var(--gold);
+    padding-bottom:0.3rem;display:inline-block;margin-top:1rem;transition:color 0.3s;
+  }
+  .contact-email:hover{color:var(--gold);}
+  .contact-links{display:flex;justify-content:center;gap:2rem;margin-top:2rem;flex-wrap:wrap;}
+  .cl{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;}
+  .cl:hover{color:var(--gold);}
+  .social-icon-btn {
+    display:inline-flex;align-items:center;justify-content:center;
+    width:48px;height:48px;border-radius:50%;
+    border:1px solid var(--mid2);color:var(--muted);
+    transition:all 0.3s;text-decoration:none;
+  }
+  .social-icon-btn:hover { border-color:var(--gold);color:var(--gold);transform:scale(1.1); }
+  .whatsapp-icon:hover { border-color:#25D366 !important;color:#25D366 !important; }
+  .imdb-cta{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    margin-top:2rem;padding:0.8rem 2rem;background:#F5C518;
+    color:#000;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;
+    text-decoration:none;font-weight:600;transition:opacity 0.3s;
+  }
+  .imdb-cta:hover{opacity:0.85;}
+
+  footer{
+    padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--mid);font-size:0.66rem;color:var(--muted);
+    letter-spacing:0.1em;flex-wrap:wrap;gap:0.5rem;
+  }
+  footer .fl{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--gold);}
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.75s ease,transform 0.75s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+  .reveal-left{opacity:0;transform:translateX(-50px);transition:opacity 0.75s ease,transform 0.75s ease;}
+  .reveal-left.visible{opacity:1;transform:none;}
+  .reveal-right{opacity:0;transform:translateX(50px);transition:opacity 0.75s ease,transform 0.75s ease;}
+  .reveal-right.visible{opacity:1;transform:none;}
+  .reveal-scale{opacity:0;transform:scale(0.92);transition:opacity 0.75s ease,transform 0.75s ease;}
+  .reveal-scale.visible{opacity:1;transform:scale(1);}
+
+  /* Staggered children */
+  .stagger > * { opacity:0; transform:translateY(30px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .stagger.visible > *:nth-child(1){opacity:1;transform:none;transition-delay:0.05s;}
+  .stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:0.15s;}
+  .stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:0.25s;}
+  .stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:0.35s;}
+  .stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:0.45s;}
+  .stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:0.55s;}
+
+  /* Section entrance line */
+  .sec-line {
+    width:0;height:1px;background:var(--gold);
+    transition:width 1s ease;margin-bottom:2rem;
+  }
+  .sec-line.visible{width:60px;}
+
+  /* Gold shimmer on section headings */
+  .sec-heading {
+    background: linear-gradient(90deg, var(--cream) 0%, var(--gold2) 50%, var(--cream) 100%);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s ease infinite;
+  }
+  @keyframes shimmer {
+    0%{background-position:200%}
+    100%{background-position:-200%}
+  }
+
+  /* IMDb badge on notable works */
+  .nc-imdb {
+    display:inline-flex;align-items:center;gap:0.4rem;
+    margin-top:0.8rem;padding:0.3rem 0.8rem;
+    background:#F5C518;color:#000;
+    font-size:0.62rem;font-weight:600;letter-spacing:0.1em;
+    text-decoration:none;text-transform:uppercase;
+    transition:opacity 0.3s;
+  }
+  .nc-imdb:hover{opacity:0.8;}
+
+  /* Floating section number */
+  .section-num {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:8rem;color:transparent;
+    -webkit-text-stroke:1px rgba(212,168,67,0.06);
+    position:absolute;right:3rem;top:2rem;
+    line-height:1;pointer-events:none;
+    transition:opacity 0.5s;
+  }
+
+  @media(max-width:900px){
+    nav{padding:1rem 1.5rem;} .nav-links{display:none;}
+    .hero{padding:0 1.5rem 3.5rem;}
+    .about{grid-template-columns:1fr;padding:4rem 1.5rem;gap:2.5rem;}
+    .exp-grid{grid-template-columns:1fr;}
+    .notables-grid{grid-template-columns:repeat(2,1fr);}
+    section{padding:4rem 1.5rem;}
+    footer{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#expertise">Expertise</a></li>
+    <li><a href="#notable">Notable Works</a></li>
+    <li><a href="#filmography">Filmography</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://www.imdb.com/name/nm15360041/" target="_blank" class="nav-imdb">⭐ IMDb</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-waveform" id="waveform"></div>
+  <div class="hero-bg-text">MIXER</div>
+  <div class="hero-content">
+    <p class="hero-tag">Re-Recording Mix Engineer · Indian Cinema</p>
+    <h1 class="name">Sanjith<em>Punnose</em></h1>
+    <p class="hero-role">Re-Recording Mix Engineer</p>
+    <p class="hero-sub">Post-Production Sound · Indian Film Industry · Kerala</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="n">40+</span><span class="l">Feature Films</span></div>
+      <div class="stat"><span class="n">3+</span><span class="l">Years Active</span></div>
+      <div class="stat"><span class="n">A-list</span><span class="l">Collaborations</span></div>
+    </div>
+    <div class="hero-btns">
+      <a href="#filmography" class="btn-primary">View Filmography →</a>
+      <a href="https://www.imdb.com/name/nm15360041/" target="_blank" class="btn-imdb">⭐ IMDb Profile</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="photo-wrap reveal-left">
+    <div class="photo-box">
+      <div class="corner2 c1"></div><div class="corner2 c2"></div>
+      <div class="corner2 c3"></div><div class="corner2 c4"></div>
+      <div class="photo-inner">
+        <span class="photo-icon">🎙️</span>
+        <span>Your Photo Here</span>
+      </div>
+    </div>
+    <div class="photo-badge">
+      <span class="bn">40+</span>
+      <span class="bl">Films &<br>Counting</span>
+    </div>
+  </div>
+  <div class="about-text reveal-right">
+    <p class="sec-label">About Me</p>
+    <h2 class="sec-heading">Shaping the<br><em style="font-style:italic;color:var(--gold)">Final Sound</em></h2>
+    <p>I am <strong>Sanjith</strong>, a <strong>Re-Recording Mix Engineer</strong> based in Kerala, specialising in Malayalam cinema's post-production sound. Over 3+ years in the industry, I have crafted the final sonic identity of <strong>40+ feature films</strong>, blending dialogue, music, and effects into seamless cinematic experiences.</p>
+    <p>My work spans major commercial releases with Kerala's biggest stars — from Dileep and Mohanlal to Anoop Menon and Dhyan Sreenivasan. I bring <strong>precision, creativity, and technical excellence</strong> to every final mix, ensuring each film sounds exactly as the director envisions it.</p>
+    <p>With deep expertise in <strong>theatrical mixing, OTT deliveries, and immersive audio formats</strong>, I am committed to pushing the sonic boundaries of Malayalam cinema forward.</p>
+    <div class="tags">
+      <span class="tag">Re-Recording Mix</span>
+      <span class="tag">Final Mix</span>
+      <span class="tag">Dolby Atmos</span>
+      <span class="tag">5.1 Surround</span>
+      <span class="tag">OTT Delivery</span>
+      <span class="tag">Dialogue Edit</span>
+      <span class="tag">Music Mix</span>
+      <span class="tag">SFX Design</span>
+      <span class="tag">Pro Tools</span>
+      <span class="tag">Malayalam Cinema</span>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section class="expertise" id="expertise">
+  <div class="reveal">
+    <p class="sec-label">What I Do</p>
+    <h2 class="sec-heading">Areas of Expertise</h2>
+  </div>
+  <div class="exp-grid stagger">
+    <div class="ec">
+      <div class="ec-num">01</div>
+      <h3>Re-Recording Mix</h3>
+      <p>Crafting the final audio mix for theatrical and OTT releases — balancing dialogue, music, and effects to deliver the director's vision.</p>
+    </div>
+    <div class="ec">
+      <div class="ec-num">02</div>
+      <h3>Dolby Atmos, 5.1 & Stereo</h3>
+      <p>Immersive audio mixing for premium theatrical releases and streaming platforms, creating 3D soundscapes that surround the audience. Also delivering crisp stereo mixes for broadcast and digital platforms.</p>
+    </div>
+    <div class="ec">
+      <div class="ec-num">03</div>
+      <h3>Music Integration</h3>
+      <p>Seamlessly blending BGM and songs into the final mix, working closely with composers to achieve the perfect emotional balance.</p>
+    </div>
+    <div class="ec">
+      <div class="ec-num">04</div>
+      <h3>Dialogue Clarity</h3>
+      <p>Ensuring crystal-clear intelligibility of performances, with meticulous editing and dynamic processing for every scene.</p>
+    </div>
+    <div class="ec">
+      <div class="ec-num">05</div>
+      <h3>OTT Mastering</h3>
+      <p>Platform-specific loudness compliance and delivery specs for Amazon Prime, Netflix, Disney+ Hotstar, and SonyLIV.</p>
+    </div>
+    <div class="ec">
+      <div class="ec-num">06</div>
+      <h3>Sound Effects</h3>
+      <p>Curating and designing the complete SFX layer — from ambient textures to cinematic impacts — that grounds every scene in reality.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NOTABLE WORKS -->
+<section class="notable" id="notable">
+  <div class="reveal">
+    <p class="sec-label">Spotlight</p>
+    <h2 class="sec-heading">Notable Works</h2>
+  </div>
+  <div class="notables-grid stagger">
+    <div class="nc">
+      <div class="nc-poster-wrap">
+        <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>Bha. Bha. Ba.</div>
+        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/fMDt3o7CVXDc84WIbOskya8XkSN.jpg" alt="Bha. Bha. Ba." referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+      </div>
+      <div class="nc-info">
+        <div class="nc-role"><span class="badge b1">Asst. Re-Recording Mix Engineer</span></div>
+        <div class="nc-year">2025</div>
+        <div class="nc-title">Bha. Bha. Ba.</div>
+        <div class="nc-dir">Dir. Dhananjay Shankar</div>
+        <div class="nc-cast">Mohanlal · Dileep · Vineeth Sreenivasan · Dhyan Sreenivasan</div>
+        <a href="https://www.imdb.com/title/tt28551273/" target="_blank" class="nc-imdb">⭐ IMDb</a>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="nc-poster-wrap">
+        <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>J.S.K</div>
+        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/h9vFIBThQUEHe4KBiGBr3JWJNUA.jpg" alt="JSK" referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+      </div>
+      <div class="nc-info">
+        <div class="nc-role"><span class="badge b1">Asst. Re-Recording Mix Engineer</span></div>
+        <div class="nc-year">2025</div>
+        <div class="nc-title">J.S.K - Janaki V v/s State of Kerala</div>
+        <div class="nc-dir">Dir. Pravin Narayanan · Malayalam</div>
+        <div class="nc-cast">IMDb Rating: 5.8</div>
+        <a href="https://www.imdb.com/title/tt23458804/" target="_blank" class="nc-imdb">⭐ IMDb</a>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="nc-poster-wrap">
+        <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>35-Chinna Katha Kaadu</div>
+        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/8Wssy3WJYeF3QFu6E5c1iW74YjQ.jpg" alt="35 Chinna Katha Kaadu" referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+      </div>
+      <div class="nc-info">
+        <div class="nc-role"><span class="badge b2">Asst. Re-Recording Mix Engineer</span></div>
+        <div class="nc-year">2024</div>
+        <div class="nc-title">35-Chinna Katha Kaadu</div>
+        <div class="nc-dir">Dir. Nanda Kishore · Telugu</div>
+        <div class="nc-cast">IMDb Rating: 7.9 ⭐</div>
+        <a href="https://www.imdb.com/title/tt32750432/" target="_blank" class="nc-imdb">⭐ IMDb</a>
+      </div>
+    </div>
+    <div class="nc">
+      <div class="nc-poster-wrap">
+        <div class="nc-poster-fallback"><span class="pf-icon">🎬</span>Pavi Caretaker</div>
+        <img class="nc-poster" src="https://image.tmdb.org/t/p/w500/kVp1aEsHLxGknTpKaJXBrjkv8GX.jpg" alt="Pavi Caretaker" referrerpolicy="no-referrer" crossorigin="anonymous" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'"/>
+      </div>
+      <div class="nc-info">
+        <div class="nc-role"><span class="badge b2">Asst. Re-Recording Mix Engineer</span></div>
+        <div class="nc-year">2024</div>
+        <div class="nc-title">Pavi Caretaker</div>
+        <div class="nc-dir">Dir. Vineeth Kumar · Malayalam</div>
+        <div class="nc-cast">Dileep · IMDb Rating: 5.0</div>
+        <a href="https://www.imdb.com/title/tt27369385/" target="_blank" class="nc-imdb">⭐ IMDb</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILMOGRAPHY -->
+<section class="filmography" id="filmography">
+  <div class="film-head reveal">
+    <div>
+      <p class="sec-label">Complete Credits</p>
+      <h2 class="sec-heading">Filmography</h2>
+    </div>
+    <div class="filters">
+      <button class="fb active" onclick="filter('all',this)">All</button>
+      <button class="fb" onclick="filter('2025',this)">2025</button>
+      <button class="fb" onclick="filter('2024',this)">2024</button>
+      <button class="fb" onclick="filter('2023',this)">2023</button>
+      <button class="fb" onclick="filter('2022',this)">2022</button>
+      <button class="fb" onclick="filter('Malayalam',this)">Malayalam</button>
+      <button class="fb" onclick="filter('Telugu',this)">Telugu</button>
+    </div>
+  </div>
+  <div class="reveal">
+    <table class="ft">
+      <thead><tr><th>Year</th><th>Title</th><th>Language</th><th>Director</th><th>Music Director</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <button class="smb" id="smb" onclick="toggleAll()">Show All Films ↓</button>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner reveal">
+    <p class="sec-label">Hire Me</p>
+    <h2 class="sec-heading" style="font-family:'Cormorant Garamond',serif">Available for<br><em style="color:var(--gold);font-style:italic">New Projects</em></h2>
+    <br>
+    <div class="contact-links">
+      <a href="https://www.instagram.com/sanjithpunnose/?hl=en" target="_blank" class="social-icon-btn" title="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://wa.me/917034137352" target="_blank" class="social-icon-btn whatsapp-icon" title="WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+    </div>
+    <br>
+    <a href="https://www.imdb.com/name/nm15360041/" target="_blank" class="imdb-cta">⭐ View Full IMDb Profile</a>
+  </div>
+</section>
+
+<footer>
+  <span class="fl">Sanjith Punnose</span>
+  <span>© 2025 · Re-Recording Mix Engineer · Indian Cinema</span>
+  <span>Kerala, India</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cur'), curR = document.getElementById('curR');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function ac(){cur.style.left=mx+'px';cur.style.top=my+'px';
+    rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;
+    curR.style.left=rx+'px';curR.style.top=ry+'px';
+    requestAnimationFrame(ac);})();
+
+  // Waveform bars
+  const wf = document.getElementById('waveform');
+  for(let i=0;i<60;i++){
+    const b=document.createElement('div'); b.className='wbar';
+    const h=Math.random()*0.8+0.1;
+    b.style.cssText=`--base:${h};height:100%;animation-delay:${Math.random()*2}s;animation-duration:${1.5+Math.random()}s`;
+    wf.appendChild(b);
+  }
+
+  // Scroll reveal — all animation types
+  const ob=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger, .sec-line').forEach(el=>ob.observe(el));
+
+  // Films data — confirmed + placeholder for full 40+
+  const films = [
+    {year:2025,title:'Bha. Bha. Ba.',lang:'Malayalam',dir:'Dhananjay Shankar',music:'Gopi Sundar'},
+    {year:2025,title:'Nidhiyum Bhoothavum',lang:'Malayalam',dir:'Sajan Joseph',music:'Jaison J Nair'},
+    {year:2025,title:'Innocent',lang:'Malayalam',dir:'Satheesh Thanvi',music:'Jay Stellar'},
+    {year:2025,title:'AWM Agney Weds Minal',lang:'Malayalam',dir:'Rishav Agarwal',music:'—'},
+    {year:2025,title:'Rajakanyaka',lang:'Malayalam',dir:'Victor Adam',music:'Arun Venpala'},
+    {year:2025,title:'Raveendra Nee Evide?',lang:'Malayalam',dir:'Manoj Palodan',music:'Prakash Ulliyeri'},
+    {year:2025,title:'KothaPallilo Okappudu',lang:'Telugu',dir:'Praveena Paruchuri',music:'Mani Sharma / Varun Unni'},
+    {year:2025,title:'J.S.K - Janaki V v/s State of Kerala',lang:'Malayalam',dir:'Pravin Narayanan',music:'—'},
+    {year:2025,title:'23',lang:'Malayalam',dir:'—',music:'—'},
+    {year:2025,title:'Subham',lang:'Telugu',dir:'Praveen Kandregula',music:'Shor Police'},
+    {year:2025,title:'Brahma Anandam',lang:'Telugu',dir:'RVS Nikhil',music:'Sandilya Pisapati'},
+    {year:2025,title:'ID: The Fake',lang:'Malayalam',dir:'Arun Sivavilasam',music:'Nihal Sadiq'},
+    {year:2024,title:'Kundannoorile Kulsitha Lahala',lang:'Malayalam',dir:'Akshay Ashok PK',music:'Melvin Michael'},
+    {year:2024,title:'Thekku Vadakku',lang:'Malayalam',dir:'Prem Sankar',music:'Sam C.S.'},
+    {year:2024,title:'Bad Boyz',lang:'Malayalam',dir:'Omar',music:'William Francis'},
+    {year:2024,title:'35-Chinna Katha Kaadu',lang:'Telugu',dir:'Nanda Kishore',music:'—'},
+    {year:2024,title:'Virunnu',lang:'Malayalam',dir:'Kannan Thamarakkulam',music:'Ratheesh Vega'},
+    {year:2024,title:'Thaanara',lang:'Malayalam',dir:'Haridas',music:'Gopi Sundar'},
+    {year:2024,title:'Secret',lang:'Malayalam',dir:'S.N. Swamy',music:'Jakes Bejoy'},
+    {year:2024,title:'Kattis Gang',lang:'Malayalam',dir:'Aneel Dev',music:'—'},
+    {year:2024,title:'Pavi Caretaker',lang:'Malayalam',dir:'Vineeth Kumar',music:'Midhun Mukundan'},
+    {year:2024,title:'Qalb',lang:'Malayalam',dir:'Sajid Yahiya',music:'Prakash Alex'},
+    {year:2024,title:'Double Engine',lang:'Telugu',dir:'Rohit Penumatsa',music:'Vivek Sagar'},
+    {year:2023,title:'Bandra',lang:'Malayalam',dir:'Arun Gopy',music:'Sam C.S.'},
+    {year:2023,title:'Rahel Makan Kora',lang:'Malayalam',dir:'Ubaini E.',music:'—'},
+    {year:2023,title:'Mindgame',lang:'Hindi',dir:'—',music:'—'},
+    {year:2023,title:'Patnagarh',lang:'Odia',dir:'—',music:'—'},
+    {year:2023,title:'Oruvattam Koodi',lang:'Malayalam',dir:'—',music:'—'},
+    {year:2023,title:'Olam',lang:'Malayalam',dir:'V.S. Abhilash',music:'Arun Thomas'},
+    {year:2023,title:'Article 21',lang:'Malayalam',dir:'Lenin Balakrishnan',music:'—'},
+    {year:2023,title:'Voice of Sathyanathan',lang:'Malayalam',dir:'Rafi',music:'Ankit Menon'},
+    {year:2023,title:'Kolla',lang:'Malayalam',dir:'Suraj Varma',music:'Shaan Rahman'},
+    {year:2023,title:'Live',lang:'Malayalam',dir:'Jithu Madhavan',music:'Sushin Shyam'},
+    {year:2023,title:'8 A.M. Metro',lang:'Telugu',dir:'Raj R',music:'Sandeep Chowta'},
+    {year:2023,title:'Jackson Bazaar Youth',lang:'Malayalam',dir:'Shamal Sulaiman',music:'Govind Vasantha'},
+    {year:2023,title:'Pakalum Paathiravum',lang:'Malayalam',dir:'Ajai Vasudev',music:'Stephen Devassy'},
+    {year:2023,title:'Oh My Darling',lang:'Malayalam',dir:'Alfred D Samuel',music:'Shaan Rahman'},
+    {year:2023,title:'Enkilum Chandrike',lang:'Malayalam',dir:'Adithyan Chandrashekar',music:'Ifthi'},
+    {year:2023,title:'Vedikkettu',lang:'Malayalam',dir:'Vishnu Unnikrishnan & Bibin George',music:'Shyam Prasad / Shibu Pularkazhcha'},
+    {year:2022,title:'Aanandam Paramanandam',lang:'Malayalam',dir:'Shafi',music:'Shaan Rahman'},
+    {year:2009,title:'Paleri Manikyam',lang:'Malayalam',dir:'Ranjith',music:'Bijibal'},
+    {year:2001,title:'Ravanaprabhu',lang:'Malayalam',dir:'Rajasenan',music:'Raveendran'},
+  ];
+
+  let showAll=false,cf='all';
+  function getFiltered(){
+    if(cf==='all') return films;
+    if(['Malayalam','Telugu','Hindi','Odia'].includes(cf)) return films.filter(f=>f.lang===cf);
+    return films.filter(f=>String(f.year)===cf);
+  }
+  function render(){
+    const filtered=getFiltered();
+    const show=showAll?filtered:filtered.slice(0,8);
+    document.getElementById('rows').innerHTML=show.map(f=>`
+      <tr>
+        <td class="yr">${f.year}</td>
+        <td class="tt">${f.title}</td>
+        <td style="font-size:0.78rem;color:var(--muted)">${f.lang}</td>
+        <td style="font-size:0.82rem;color:var(--body)">${f.dir}</td>
+        <td style="font-size:0.82rem;color:var(--body)">${f.music}</td>
+      </tr>`).join('');
+    const btn=document.getElementById('smb');
+    if(filtered.length<=8){btn.style.display='none';}
+    else{btn.style.display='block';btn.textContent=showAll?'Show Less ↑':`Show All ${filtered.length} Films ↓`;}
+  }
+  function toggleAll(){showAll=!showAll;render();}
+  function filter(v,btn){cf=v;showAll=false;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+  render();
+</script>
+</body>
+</html>
